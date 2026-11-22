@@ -1,24 +1,49 @@
-# Alertas de Telegram en n8n
+# Alertas de Telegram con n8n
 
-El conector de Windows escucha los mensajes nuevos recibidos en grupos de una cuenta personal de Telegram. Envía el texto al webhook local de n8n. Cuando el flujo detecta una señal, el conector envía el aviso a **Mensajes guardados** con el grupo y el mensaje original.
+El conector escucha mensajes nuevos de los grupos de tu cuenta personal de Telegram, incluidos los de personas y bots. Envía el texto al webhook local de n8n. Si una señal cumple las reglas, te avisa en **Mensajes guardados** con el nombre del grupo, los datos detectados y el mensaje original.
+
+| Señal | Cuándo avisa |
+| --- | --- |
+| Entrada o salida de un exchange | Cuando el total transferido en USD alcanza el umbral. |
+| Aumento de interés abierto (OI) | Cuando el aumento en USD de al menos un exchange alcanza el umbral. El aviso muestra los exchanges que lo alcanzaron. |
+| Señal de ciclo | Cuando el mensaje trae una señal explícita y `alertarSenalSinUsd` está habilitado. El aviso incluye los cambios de precio y OI en porcentaje. |
+
+## Requisitos
+
+- Windows con PowerShell y Python 3.12 disponible mediante `py -3.12`. El lanzador crea el entorno de Python e instala Telethon la primera vez.
+- n8n en ejecución en `http://localhost:5678` y una API key de n8n para configurar el webhook.
+- Una cuenta personal de Telegram y el **App ID** y **App hash** de su aplicación, disponibles en [my.telegram.org](https://my.telegram.org) en **API development tools**.
+
+## Primera instalación
+
+1. En el editor de n8n, importa [el JSON del flujo](Telegram%20personal%20-%20Alertas%20cripto.json).
+2. Abre PowerShell en esta carpeta y ejecuta el siguiente comando. Ingresa la API key de n8n cuando se te pida. El script crea la credencial **Telegram personal - acceso local** y guarda el secreto del webhook cifrado para tu usuario de Windows.
+
+   ```powershell
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Configurar webhook.ps1"
+   ```
+
+3. En n8n, abre **Recibir mensaje de Telegram**, selecciona la credencial de tipo **Header Auth** que acabas de crear y pulsa **Publicar**.
+4. Abre [Iniciar Telegram.cmd](Iniciar%20Telegram.cmd). Ingresa el App ID y el App hash. En el primer inicio, escribe también tu número con código de país, el código que te envíe Telegram y tu contraseña de verificación en dos pasos si aplica.
+
+## Uso diario
+
+- Cuando aparezca **«Cuenta personal de Telegram conectada»**, el conector está escuchando. Mantén abiertos el CMD y n8n para recibir avisos. Al cerrar el CMD se detiene la escucha.
+- Para cambiar el umbral, edita `umbralUsd` en el nodo **Umbral en USD** y pulsa **Publicar**. El JSON incluye `20000`, por lo que un movimiento de exactamente 20.000 USD cumple. En el mismo nodo puedes activar o desactivar `alertarSenalSinUsd`. Puedes publicar estos cambios con el conector abierto.
+- Para revisar formatos, cierra el CMD actual y abre [Revisar formatos.cmd](Revisar%20formatos.cmd). Mientras escucha mensajes nuevos, el conector revisa hasta 60 mensajes de los últimos 14 días por grupo. **«Muestra lista»** indica que terminó y guardó `muestras-formatos.json` en `%LOCALAPPDATA%\TelegramAlertasN8n`. **«Muestra parcial»** indica que guardó lo que alcanzó a revisar.
 
 ## Archivos
 
-- `Telegram personal - Alertas cripto.json` reproduce la última versión publicada y verificada del flujo, en formato importable por n8n.
-- `detectar.js` contiene el código del nodo **Detectar y preparar alerta**. Los cambios que se hagan a este archivo se deben aplicar también al nodo y publicar desde n8n.
-- `Iniciar Telegram.cmd` inicia el conector para recibir alertas. `Revisar formatos.cmd` también toma una muestra de mensajes recientes.
-- `muestras-formatos.ejemplo.json` es la copia del muestreo con identificadores genéricos para los grupos.
-
-## Instalación en otra instancia local
-
-1. Inicia n8n en `http://localhost:5678` y asegúrate de tener Python 3.12 en Windows.
-2. Importa `Telegram personal - Alertas cripto.json` como workflow.
-3. En PowerShell, desde esta carpeta, ejecuta `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Configurar webhook.ps1"` e ingresa tu API key de n8n en el prompt. Se creará la credencial **Telegram personal - acceso local** y el archivo cifrado `webhook.dpapi` para este usuario de Windows.
-4. Abre el nodo **Recibir mensaje de Telegram**, selecciona esa credencial de tipo **Header Auth** y publica el flujo.
-5. Abre `Iniciar Telegram.cmd` e ingresa el App ID y el App hash de tu aplicación de Telegram, disponibles en [my.telegram.org](https://my.telegram.org). En el primer inicio se pedirá el número de la cuenta personal y su código de acceso.
-
-Mantén abierto el conector para recibir mensajes. Su sesión de Telegram y el muestreo original se guardan en `%LOCALAPPDATA%\TelegramAlertasN8n`.
-
-## Parámetros en n8n
-
-En el nodo **Umbral en USD**, `umbralUsd` se aplica de forma inclusiva a transferencias de exchanges y a aumentos de interés abierto reportados por exchange. `alertarSenalSinUsd` controla las alertas de ciclo que incluyen una señal explícita y no reportan un aumento en USD. Publica el flujo para aplicar cualquier cambio.
+| Archivo | Para qué sirve |
+| --- | --- |
+| `Telegram personal - Alertas cripto.json` | Copia importable del flujo de n8n con el webhook, los parámetros y el filtro. |
+| `detectar.js` | Código del nodo que reconoce los tres formatos, comprueba las reglas y arma el aviso. Si lo editas, aplica el cambio también al nodo de n8n, publica y sincroniza el JSON del repositorio. |
+| `escuchar.py` | Inicia sesión en Telegram, recibe mensajes de grupos, consulta el webhook y envía los avisos. |
+| `Iniciar Telegram.cmd` | Abre el conector en modo de escucha. |
+| `Iniciar Telegram.ps1` | Prepara el entorno de Python, lee el secreto local y ejecuta el conector. |
+| `Configurar webhook.ps1` | Crea la credencial en n8n y el archivo local cifrado `webhook.dpapi`. |
+| `Revisar formatos.cmd` | Abre el conector con el muestreo habilitado. |
+| `revisar_formatos.py` | Busca posibles formatos, agrupa ejemplos repetidos y guarda el informe local. |
+| `muestras-formatos.ejemplo.json` | Copia del muestreo con nombres de grupo genéricos. |
+| `.gitignore` | Excluye de Git la sesión, el secreto del webhook y el muestreo con los nombres originales. |
+| `README.md` | Guía de instalación, uso y archivos del proyecto. |
