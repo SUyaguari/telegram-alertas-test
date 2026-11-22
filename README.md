@@ -10,14 +10,17 @@ El conector escucha mensajes nuevos de los grupos de tu cuenta personal de Teleg
 
 ## Requisitos
 
-- Windows con PowerShell y Python 3.12 disponible mediante `py -3.12`. El lanzador crea el entorno de Python e instala Telethon la primera vez.
-- n8n en ejecución en `http://localhost:5678` y una API key de n8n para configurar el webhook.
-- Una cuenta personal de Telegram y el **App ID** y **App hash** de su aplicación, disponibles en [my.telegram.org](https://my.telegram.org) en **API development tools**.
+- Una PC con Windows, **Python 3.12** instalado y la carpeta `telegram-alertas` descargada o clonada.
+- **n8n local** instalado en esa PC, configurado para usar el puerto `5678`.
+- Una **cuenta personal de Telegram** que ya esté en los grupos que quieres escuchar.
 
-## Primera instalación
+## Primera instalación paso a paso
 
-1. En el editor de n8n, importa [el JSON del flujo](Telegram%20personal%20-%20Alertas%20cripto.json).
-2. Configura el webhook desde **CMD (Símbolo del sistema)** o **PowerShell**. Sustituye `C:\ruta\telegram-alertas` por la ruta de tu carpeta. Si ya estás en ella, omite la primera línea.
+1. **Arranca n8n y comprueba Python.** Abre [http://localhost:5678](http://localhost:5678) en el navegador e inicia sesión en n8n. En CMD o PowerShell, ejecuta `py -3.12 --version`. Debe mostrar `Python 3.12.x`.
+2. **Reúne las dos credenciales que vas a usar.**
+   - En n8n, entra a **Settings → n8n API → Create an API key** y copia la clave. Si n8n te deja elegir permisos, incluye `credential:create`. [Guía de la API de n8n](https://docs.n8n.io/api/authentication/)
+   - En [my.telegram.org](https://my.telegram.org), entra con tu cuenta personal, abre **API development tools** y copia el **App ID** y el **App hash**. Los usarás al iniciar el conector.
+3. **Crea la credencial del webhook.** Elige **CMD (Símbolo del sistema)** o **PowerShell** y ejecuta el bloque correspondiente. Cambia `C:\ruta\telegram-alertas` por la ruta real de la carpeta. Si ya estás en ella, omite la primera línea.
 
    **CMD (Símbolo del sistema)**
 
@@ -33,10 +36,11 @@ El conector escucha mensajes nuevos de los grupos de tu cuenta personal de Teleg
    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Configurar webhook.ps1"
    ```
 
-   Ingresa la API key de n8n cuando se te pida. El script crea la credencial **Telegram personal - acceso local** y guarda el secreto del webhook cifrado para tu usuario de Windows.
+   Cuando se te pida **API key de n8n**, pega la clave que creaste en el paso 2. Espera a que aparezca **«Credencial creada: Telegram personal - acceso local»**. Haz este paso una vez por instalación.
 
-3. En n8n, abre **Recibir mensaje de Telegram**, selecciona la credencial de tipo **Header Auth** que acabas de crear y pulsa **Publicar**.
-4. Abre [Iniciar Telegram.cmd](Iniciar%20Telegram.cmd). Ingresa el App ID y el App hash. En el primer inicio, escribe también tu número con código de país, el código que te envíe Telegram y tu contraseña de verificación en dos pasos si aplica.
+4. **Importa y publica el flujo.** Crea un flujo en n8n. En el menú **⋯** del editor, elige **Import from File** e importa [Telegram personal - Alertas cripto.json](Telegram%20personal%20-%20Alertas%20cripto.json). Abre el nodo **Recibir mensaje de Telegram**, selecciona **Telegram personal - acceso local** como credencial **Header Auth** y pulsa **Publicar**.
+5. **Inicia el conector.** Haz doble clic en [Iniciar Telegram.cmd](Iniciar%20Telegram.cmd). La primera vez prepara el entorno de Python e instala Telethon. Cuando se te pida **API ID de Telegram**, escribe el **App ID**. Después ingresa el **App hash**. Si Telegram pide iniciar sesión, escribe tu número con código de país, el código que recibas y tu contraseña de verificación en dos pasos si aplica. Deja abierta la ventana cuando veas **«Cuenta personal de Telegram conectada»**.
+6. **Comprueba que llegan los avisos.** Con el umbral inicial de 20.000 USD, pide a alguien que envíe `$BREV 大额流入交易所$213K（30笔） · ETH` en un grupo de pruebas de Telegram al que pertenezcas. Deberías recibir en **Mensajes guardados** un aviso de entrada al exchange por **213.000 USD**. Si cambiaste el umbral, usa un ejemplo cuyo monto lo alcance.
 
 ## Uso diario
 
