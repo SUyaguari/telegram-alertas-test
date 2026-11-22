@@ -1,0 +1,225 @@
+{
+  "days": 14,
+  "limitPerGroup": 60,
+  "error": null,
+  "groups": [
+    {
+      "group": "Grupo 01",
+      "messagesReviewed": 48,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 02",
+      "messagesReviewed": 40,
+      "formats": [
+        {
+          "count": 1,
+          "text": "ÚLTIMA HORA: Las criptomonedas siguen desplomándose\nEl $BTC cae por debajo de los 56 000 dólares\nEl $ETH cae por debajo de los 1 550 dólares\nEl $XRP cae por debajo de los 0,88 dólares\nEl $SOL cae por debajo de los 66 dólares\nSe han liquidado 650 000 000 $ en posiciones apalancadas de criptomonedas en los últimos 60 minutos.\n🐺 [oculto]"
+        },
+        {
+          "count": 1,
+          "text": "ÚLTIMA HORA: GTA 6 se convierte en el mayor lanzamiento de la historia en el sector del entretenimiento, con unas ventas de 3.790.000.000 dólares en su primer día.\n🐺 [oculto]"
+        },
+        {
+          "count": 1,
+          "text": "ÚLTIMA HORA: Las criptomonedas siguen desplomándose\nEl $BTC cae por debajo de los 61 000 dólares\nEl $ETH cae por debajo de los 1 700 dólares\nEl $XRP cae por debajo de los 0,95 dólares\nEl $SOL cae por debajo de los 70 dólares\nLa capitalización de mercado de las criptomonedas ha perdido más de 90 000 000 000 de dólares en las últimas 24 horas.\n🐺 [oculto]"
+        },
+        {
+          "count": 1,
+          "text": "ÚLTIMA HORA: Las acciones de Anthropic ($ANT) se desploman un 10 % hasta los 87 dólares en la sesión previa a la apertura, tras la salida a bolsa de ayer.\n🐺 [oculto]"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 03",
+      "messagesReviewed": 59,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 04",
+      "messagesReviewed": 20,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 05",
+      "messagesReviewed": 34,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 06",
+      "messagesReviewed": 59,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 07",
+      "messagesReviewed": 47,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 08",
+      "messagesReviewed": 34,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 09",
+      "messagesReviewed": 57,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 10",
+      "messagesReviewed": 6,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 11",
+      "messagesReviewed": 3,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 12",
+      "messagesReviewed": 36,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 13",
+      "messagesReviewed": 57,
+      "formats": [
+        {
+          "count": 1,
+          "text": "binancezh: 参加 #币安钱包 bStocks 代币化证券交易大赛!🔥\n用 bStocks 打造您的 AI 投资组合——在链上交易顶级 AI 公司的代币化股票,同时赢取 50,000 USDC 奖励。\n🔸 活动时间:11月20日 14:00 – 11月27日 14:00 (东八区时间)\n🔸 通过币安钱包(无私钥)在 BNB Smart Chain ([oculto]) 上交易指定的 bStocks 代币化证券,分享 50,000 USDC 奖励。\n🔸 点击活动页面上的【报名】。仅报名后完成的买入交易会计入交易量。\n🔸 早鸟加成已开启——交易越早,加成越高。第 1 天的交易享受 3.0 倍加成。\n🔸 仅买入交易量计入(卖出不计入)。\n🔸 需满足以下条件方可获得资格:累计有效交易量至少达到 $5,000,且币安钱包内 bStocks 资产的日均 TVL 不低于 $100。\n🔸 通过币安 Alpha 或第三方 DApp 进行的交易不计入。\n通过钱包首页 Banner 进入活动页面,查看完整的合格代币化证券清单及活动详情。不要错过 👇\n[oculto]"
+        },
+        {
+          "count": 1,
+          "text": "【币安钱包将全额退还 Anthropic IPO 申购资金,免费分配获配额度并追加 100 万美元 ANTB 空投】\nForesight News 消息,币安钱包宣布,因 Anthropic IPO xStocks 活动获配额度相对于用户总申购金额不理想,将全额退还所有参与用户锁定的 USDC,并将活动获配的约 2,957 Anthropic 代币化股票,按认购额占比(pro-rata)方式分配至用户的币安钱包地址。此外,币安将追加总价值 100 万美元的 Anthropic bStocks 代币 ANTB 空投,每位合资格用户至少获得价值 6 USDC 的 ANTB,剩余奖池按申购金额比例分配。获配股票空投将于 11 月 20 日前发至币安钱包,ANTB 空投则发至币安交易所现货账户,用户无需操作。空投以 Anthropic 在纳斯达克开始稳定交易后的市场价格计价,实际价值可能波动。且币安将上线 ANTB 现货交易。\n[oculto]"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 14",
+      "messagesReviewed": 23,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 15",
+      "messagesReviewed": 58,
+      "formats": [
+        {
+          "count": 1,
+          "text": "📰 ¡NUEVOS ARTÍCULOS en el blog! 🚀\nHOY analizamos tres temas clave que están moviendo el mercado cripto:\n🔴 Rebote sin compras reales en los $64.500: tras una purga de $2.020M el fin de semana, Bitcoin intenta estabilizarse mientras los ETF acumulan -$2.11B en noviembre.\n🟡 El debut de Anthropic y el dilema de Nvidia: la salida a bolsa bajo el ticker ANT compite por el capital especulativo mientras Nvidia enfrenta sus resultados sin Jensen Huang.\n🔵 El salto del dólar presiona al mercado: el repunte del 1,1% en el billete verde golpea al oro y a BTC antes de las ventas minoristas y el discurso de Warsh.\n📲 Entérate de todo lo que sucede en el mercado en 👉 [oculto]"
+        },
+        {
+          "count": 1,
+          "text": "📰 ¡NUEVOS ARTÍCULOS en el blog! 🚀\nHOY analizamos tres temas clave que están moviendo el mercado cripto:\n🔴 Ruptura crítica bajo los $70.000: Bitcoin pierde su soporte clave tras una fuerte descarga de capital en derivados y una caída del 5,22% en el interés abierto.\n🟡 Fuga institucional y riesgo en ETH: los ETF al contado registran salidas por $47,70M mientras la deuda corporativa de BTCS amenaza con detonar ventas forzadas en Ethereum.\n🔵 Presión del dólar y espera por el IPP: los rendimientos elevados y el refugio en el billete verde mantienen la cautela antes del dato de inflación mayorista en EE.UU.\n📲 Entérate de todo lo que sucede en el mercado en 👉[oculto]"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 16",
+      "messagesReviewed": 1,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 17",
+      "messagesReviewed": 6,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 18",
+      "messagesReviewed": 8,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 19",
+      "messagesReviewed": 38,
+      "formats": [
+        {
+          "count": 1,
+          "text": "🚨🌿 EVERYONE IS LOOKING FOR THE NEXT BIG CRYPTO NARRATIVE! 🌿🚨\nBut here’s something worth thinking about...\nMost meme coins are built around a temporary trend.\n🔥 $LEAFY has a different vision.\n🌎 Cannabis culture already exists worldwide.\n💚 Millions of people recognize the lifestyle, humor, and identity.\n⚡ Solana provides the blockchain.\n🌿 $LEAFY wants to bring that entire culture together on-chain.\nThink about that for a second.\nThis isn’t about promising overnight riches. It’s about recognizing a cultural narrative with an existing global audience.\nThe vision is ambitious. The potential is speculative. But the community is worth checking out.\n🚀 Discover $LEAFY, do your research, and decide for yourself!\n🌿 JOIN THE COMMUNITY:\n[oculto]"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 20",
+      "messagesReviewed": 50,
+      "formats": [
+        {
+          "count": 1,
+          "text": "It’s everybody that has $100 ? To buy coin"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 21",
+      "messagesReviewed": 60,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 22",
+      "messagesReviewed": 2,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 23",
+      "messagesReviewed": 31,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 24",
+      "messagesReviewed": 20,
+      "formats": [
+        {
+          "count": 1,
+          "text": "📌 【bsc】 现货不怕 (现货不怕)\n📄 合约: [oculto]\n⚖️ Dex: Pancake\n💲 价格: $0.0001284\n💰 市值: $128.45K\n💧 流动性: $33.96K\n🪙 交易对: 132.37M 现货不怕 / 28.75 WBNB\n📈 15m: -9.31%, 24h: +284.28%\n🎯 狙击人: 13  抢购人: 0\n🕠 开盘时间: 2026-11-16 06:24:08\n👥 持有人: 1268(📄13.7|2.1|1.5|📄1.4|1.1)\n👨‍🍳创建者 ✅ 大资金·12.5134 BNB·钱包地址\n🔍 检测: 分数: 55(🟢低风险)\n买入税: 0%  卖出税: 1%"
+        }
+      ],
+      "error": null
+    },
+    {
+      "group": "Grupo 25",
+      "messagesReviewed": 1,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 26",
+      "messagesReviewed": 2,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 27",
+      "messagesReviewed": 12,
+      "formats": [],
+      "error": null
+    },
+    {
+      "group": "Grupo 28",
+      "messagesReviewed": 1,
+      "formats": [],
+      "error": null
+    }
+  ]
+}

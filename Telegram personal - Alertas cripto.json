@@ -1,0 +1,98 @@
+{
+  "name": "Telegram personal | Alertas cripto",
+  "nodes": [
+    {
+      "id": "ab9351df-9cc3-4ada-baba-2df56e66a223",
+      "name": "Recibir mensaje de Telegram",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "526732fa-1dfa-4d26-993b-0b59a8368007",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-personal-alertas",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "options": {}
+      }
+    },
+    {
+      "id": "2ab828e3-0ac7-410f-9a52-8ce8dbb7f00e",
+      "name": "Umbral en USD",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        0
+      ],
+      "parameters": {
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3c663c24-046f-42e3-841c-8d1a41b9189d",
+              "name": "umbralUsd",
+              "type": "number",
+              "value": 20000
+            },
+            {
+              "id": "cae8657d-d432-42f4-b227-aba14d42ccf4",
+              "name": "alertarSenalSinUsd",
+              "type": "boolean",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "87bdb2c3-6374-45d3-b99f-9255bace81e4",
+      "name": "Detectar y preparar alerta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst { umbralUsd: threshold, alertarSenalSinUsd = false } = $('Umbral en USD').first().json;\nconst message = typeof input.body?.message === 'string' ? input.body.message : '';\nif (!Number.isFinite(threshold) || threshold < 0) {\n  throw new Error('El umbral en USD debe ser un número no negativo.');\n}\nconst noAlert = [{ json: { alert: false } }];\nif (input.body?.chatType !== 'group' || !message) return noAlert;\n\nconst lines = message.normalize('NFKC').split(/\\r?\\n/)\n  .map(line => line.trim()).filter(Boolean);\nconst statsLine = /^(?:数据|數據|数据\\s*\\(|市值|价格|價格|多空比|datos\\b|data\\b|dados\\b|données\\b|market cap\\b|price\\b|precio\\b|capitalizaci[oó]n\\b)/iu;\nconst exchange = /交易所|取引所|거래소|бирж|بورص|منص[ةه]|\\b(?:exchanges?|corretoras?|bourses?|börsen?)\\b/iu;\nconst outflow = /流出|出金|引き出|출금|유출|вывод|отток|سحب|خروج|\\b(?:outflows?|withdrawals?|withdrawn|salidas?|retiros?|sa[ií]das?|saques?|retraits?|abfl[uü]sse?)\\b|\\b(?:from|desde|de la|da|des)\\s+(?:an?\\s+|the\\s+|(?:la|las|os|el|los|les)\\s+)?exchanges?\\b/iu;\nconst inflow = /流入|入金|입금|유입|депозит|приток|ввод|إيداع|ايداع|دخول|\\b(?:inflows?|deposits?|entradas?|dep[oó]sitos?|d[eé]p[oô]ts?|zufl[uü]sse?)\\b|\\b(?:to|into|hacia|a|para)\\s+(?:an?\\s+|the\\s+|(?:la|las|a|o|el|los|les)\\s+)?exchanges?\\b/iu;\nconst ticker = /\\$\\s*([A-Z0-9][A-Z0-9_-]{0,19})(?![a-zA-Z0-9_-])/gu;\nconst number = '(?:[0-9]{1,3}(?: [0-9]{3})+(?:[.,][0-9]+)?|[0-9]+(?:[.,][0-9]+)*)';\nconst unit = '(?:mil millones|mill[oó]n(?:es)?|milh(?:ão|ões)|million(?:s)?|billion(?:s)?|тыс\\.?|млн\\.?|млрд\\.?|万|萬|亿|億|千|mil|[KMB])';\nconst before = new RegExp('(?:US\\\\s*\\\\$|\\\\bUSD\\\\b\\\\s*[:=]?|\\\\$)\\\\s*(' + number + ')\\\\s*(' + unit + ')?(?![\\\\p{L}\\\\p{N}.,])', 'giu');\nconst after = new RegExp('(?<![\\\\p{L}\\\\p{N}.,$])(' + number + ')\\\\s*(' + unit + ')?\\\\s*(?:USD\\\\b|d[oó]lares?\\\\b)', 'giu');\nconst factors = {\n  k: 1e3, mil: 1e3, 'тыс': 1e3, 千: 1e3, 万: 1e4, 萬: 1e4,\n  m: 1e6, millón: 1e6, millones: 1e6, milhão: 1e6, milhões: 1e6,\n  million: 1e6, millions: 1e6, млн: 1e6, 亿: 1e8, 億: 1e8,\n  b: 1e9, billion: 1e9, billions: 1e9, 'mil millones': 1e9, млрд: 1e9,\n};\n\nfunction amountUsd(raw, suffix) {\n  let value = raw.replace(/ /g, '');\n  const separators = value.match(/[.,]/g) || [];\n  if (separators.length && new Set(separators).size === 2) {\n    const decimal = separators.at(-1);\n    value = value.split(decimal === '.' ? ',' : '.').join('').replace(decimal, '.');\n  } else if (/^[0-9]{1,3}(?:([.,])[0-9]{3})(?:\\1[0-9]{3})*$/u.test(value) &&\n      (!suffix || separators.length > 1)) {\n    value = value.replace(/[.,]/g, '');\n  } else {\n    value = value.replace(',', '.');\n  }\n  const multiplier = suffix ? factors[suffix.toLowerCase().replace(/\\.$/, '')] : 1;\n  return Number(value) * multiplier;\n}\n\nconst group = typeof input.body.group === 'string' && input.body.group.trim()\n  ? input.body.group.trim() : String(input.body.chatId ?? 'Grupo de Telegram');\nconst usdFormat = new Intl.NumberFormat('es-EC', { maximumFractionDigits: 6 });\nconst symbolStart = /^\\$([A-Z0-9][A-Z0-9_-]{0,19})\\s*/u;\nconst percent = '[+-]?[0-9]+(?:[.,][0-9]+)?%';\nconst oiHeader = /^\\$([A-Z0-9][A-Z0-9_-]{0,19})\\s*\\|\\s*(.+)$/u;\nconst oiAcceleration = new RegExp('^OI\\\\s+ускорение\\\\s*\\\\(([^)]+)\\\\)\\\\s*(' + percent + ')$', 'iu');\nconst oiGain = new RegExp('^Прирост\\\\s*:\\\\s*\\\\+?\\\\s*\\\\$\\\\s*(' + number + ')\\\\s*(' + unit + ')?\\\\s*$', 'iu');\nconst cycleHeader = new RegExp(\n  '^\\\\$([A-Z0-9][A-Z0-9_-]{0,19})\\\\s*[·•]\\\\s*(\\\\d+\\\\s*[mhd])\\\\s*(?:价格|價格)\\\\s*(' + percent +\n  ')\\\\s*\\\\|\\\\s*(?:持仓|持倉)\\\\s*(' + percent + ')$',\n  'iu',\n);\n\nfunction alert(symbol, label, details, fields) {\n  return [{ json: {\n    alert: true,\n    symbol,\n    ...fields,\n    text: `Alerta de Telegram | ${group}\\n${symbol} · ${label}\\n${details.join('\\n')}\\n\\nMensaje original:\\n${message}`,\n  } }];\n}\n\nconst firstLine = lines[0] ?? '';\nconst openInterest = firstLine.match(oiHeader);\nif (openInterest && lines.some(line => oiAcceleration.test(line))) {\n  const exchanges = openInterest[2].split(/\\s*\\+\\s*/u).map(name => name.trim()).filter(Boolean);\n  const increases = [];\n  let market;\n  let acceleration;\n  for (const line of lines.slice(1)) {\n    const exchangeName = exchanges.find(name => name.toLowerCase() === line.toLowerCase());\n    if (exchangeName) {\n      market = exchangeName;\n      acceleration = undefined;\n      continue;\n    }\n    const movement = line.match(oiAcceleration);\n    if (movement && market) acceleration = movement;\n    const gain = line.match(oiGain);\n    if (!market || !acceleration || !gain) continue;\n    const usd = amountUsd(gain[1], gain[2]);\n    if (Number.isFinite(usd)) {\n      increases.push({ exchange: market, usd, window: acceleration[1], change: acceleration[2] });\n    }\n    acceleration = undefined;\n  }\n\n  const qualifying = increases.filter(increase => increase.usd >= threshold);\n  if (!qualifying.length) return noAlert;\n  const details = qualifying.map(({ exchange, usd, window, change }) =>\n    `${exchange}: +${usdFormat.format(usd)} USD · ${change} en ${window.replace(/ч/giu, ' h')}`);\n  return alert(openInterest[1], 'Aumento de interés abierto', details, {\n    type: 'open_interest_increase',\n    exchanges: qualifying,\n  });\n}\n\nconst cycle = firstLine.match(cycleHeader);\nif (cycle) {\n  const signal = lines.map(line => line.match(/^(?:信号|信號)\\s*:\\s*(.+)$/u)).find(Boolean);\n  if (!alertarSenalSinUsd || !signal) return noAlert;\n  const [, symbol, window, priceChange, openInterestChange] = cycle;\n  return alert(symbol, 'Señal de ciclo', [\n    `Ventana: ${window} · Precio: ${priceChange} · Interés abierto: ${openInterestChange}`,\n    `Señal: ${signal[1]}`,\n    'Aumento en USD: no informado',\n  ], { type: 'cycle_signal', window, priceChange, openInterestChange });\n}\n\nconst parts = [];\nfor (const line of lines.slice(0, 4)) {\n  if (statsLine.test(line)) break;\n  parts.push(line);\n}\nfor (let index = 0; index < parts.length; index++) {\n  const line = parts[index];\n  for (const header of [line, [line, parts[index + 1]].filter(Boolean).join(' ')]) {\n    const isOutflow = outflow.test(header);\n    const isInflow = inflow.test(header);\n    if (!exchange.test(header) || isOutflow === isInflow) continue;\n\n    const symbol = [...header.matchAll(ticker)]\n      .find(match => /[A-Z]/.test(match[1]) && !/^\\d+[KMB]$|^USD$/u.test(match[1]));\n    if (!symbol) continue;\n\n    const amount = [...header.matchAll(before), ...header.matchAll(after)]\n      .sort((a, b) => a.index - b.index)[0];\n    if (!amount) continue;\n    const usd = amountUsd(amount[1], amount[2]);\n    if (!Number.isFinite(usd) || usd < threshold) return noAlert;\n\n    const direction = isOutflow ? 'Salida de exchange' : 'Entrada a exchange';\n    return alert(symbol[1], direction, [`Monto: ${usdFormat.format(usd)} USD`], {\n      type: 'exchange_transfer', usd, direction,\n    });\n  }\n}\nreturn noAlert;\n"
+      }
+    }
+  ],
+  "connections": {
+    "Recibir mensaje de Telegram": {
+      "main": [
+        [
+          {
+            "node": "Umbral en USD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Umbral en USD": {
+      "main": [
+        [
+          {
+            "node": "Detectar y preparar alerta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  }
+}
