@@ -17,11 +17,23 @@ El conector escucha mensajes nuevos de los grupos de tu cuenta personal de Teleg
 ## Primera instalación
 
 1. En el editor de n8n, importa [el JSON del flujo](Telegram%20personal%20-%20Alertas%20cripto.json).
-2. Abre PowerShell en esta carpeta y ejecuta el siguiente comando. Ingresa la API key de n8n cuando se te pida. El script crea la credencial **Telegram personal - acceso local** y guarda el secreto del webhook cifrado para tu usuario de Windows.
+2. Configura el webhook desde **CMD (Símbolo del sistema)** o **PowerShell**. Sustituye `C:\ruta\telegram-alertas` por la ruta de tu carpeta. Si ya estás en ella, omite la primera línea.
 
-   ```powershell
+   **CMD (Símbolo del sistema)**
+
+   ```bat
+   cd /d "C:\ruta\telegram-alertas"
    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Configurar webhook.ps1"
    ```
+
+   **PowerShell**
+
+   ```powershell
+   Set-Location "C:\ruta\telegram-alertas"
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Configurar webhook.ps1"
+   ```
+
+   Ingresa la API key de n8n cuando se te pida. El script crea la credencial **Telegram personal - acceso local** y guarda el secreto del webhook cifrado para tu usuario de Windows.
 
 3. En n8n, abre **Recibir mensaje de Telegram**, selecciona la credencial de tipo **Header Auth** que acabas de crear y pulsa **Publicar**.
 4. Abre [Iniciar Telegram.cmd](Iniciar%20Telegram.cmd). Ingresa el App ID y el App hash. En el primer inicio, escribe también tu número con código de país, el código que te envíe Telegram y tu contraseña de verificación en dos pasos si aplica.
